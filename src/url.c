@@ -4,42 +4,11 @@
 */
 #include <tc.h>
 
-#define TO_HEX(ch) ((uint8_t)((ch) > 9 ? (ch) + 55: (ch) + 48))
+#define TOHEX(ch) tohex[ch]
 
-static const char enindex[] = {
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      1,      0,      1,      0,      0,      0,      1,
-  1,      1,      1,      0,      1,      1,      1,      0,
-  1,      1,      1,      1,      1,      1,      1,      1,
-  1,      1,      0,      0,      0,      0,      0,      0,
-  0,      1,      1,      1,      1,      1,      1,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      1,
-  0,      1,      1,      1,      1,      1,      1,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      1,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-  0,      0,      0,      0,      0,      0,      0,      0,
-};
+static const char tohex[] = "0123456789ABCDEF";
+
+static const char *reserved = "~_-.!(*)";
 
 static const char deindex[] = {
   -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,
@@ -86,13 +55,13 @@ int urlencode(const void *text, unsigned int tsize, unsigned char *md) {
   while (tsize--)
   {
     ch = *idx++;
-    if (enindex[ch]) {
+    if(isalnum(ch) || strchr(reserved, ch)) {
       *data++ = ch;
       continue;
     }
     *data++ = '%';
-    *data++ = TO_HEX(((uint8_t)ch) >> 4);
-    *data++ = TO_HEX(((uint8_t)ch) & 0xF);
+    *data++ = TOHEX(((uint8_t)ch) >> 4);
+    *data++ = TOHEX(((uint8_t)ch) & 0xF);
   }
   return (unsigned int)(data - md);
 }
