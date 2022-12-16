@@ -22,9 +22,9 @@ int tc_pbkdf2(tc_sign_t mode, const void* password, unsigned int plen, const voi
   case TC_MD5:
     return tc_pbkdf2_md5(password, plen, salt, slen, count, out);
   case TC_SHA128:
-    return tc_pbkdf2_md5(password, plen, salt, slen, count, out);
+    return tc_pbkdf2_sha128(password, plen, salt, slen, count, out);
   case TC_SHA256:
-    return tc_pbkdf2_md5(password, plen, salt, slen, count, out);
+    return tc_pbkdf2_sha256(password, plen, salt, slen, count, out);
   }
   return -1;
 }
