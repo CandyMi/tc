@@ -38,7 +38,6 @@
   #define tc_xfree(ptr) free((ptr))
 #endif
 
-#include "md5.h"
 #include "sha.h"
 #include "rc4.h"
 #include "utils.h"
