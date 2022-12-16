@@ -42,9 +42,13 @@ add_test(NAME crc32 COMMAND $<TARGET_FILE:test_check> crc32 admin)
 add_test(NAME md5 COMMAND $<TARGET_FILE:test_md5> md5 admin)
 add_test(NAME hmac_md5 COMMAND $<TARGET_FILE:test_md5> md5 admin 123456789)
 
-# SHA
+# SHA-128
 add_test(NAME sha COMMAND $<TARGET_FILE:test_sha> sha admin)
 add_test(NAME hmac_sha COMMAND $<TARGET_FILE:test_sha> hmac_sha admin 123456789)
+
+# SHA-256
+add_test(NAME sha256 COMMAND $<TARGET_FILE:test_sha> sha256 admin)
+add_test(NAME hmac_sha256 COMMAND $<TARGET_FILE:test_sha> hmac_sha256 admin 123456789)
 
 # uuid and randomkey
 add_test(NAME uuid COMMAND $<TARGET_FILE:test_random> uuid)
