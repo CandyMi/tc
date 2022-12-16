@@ -12,7 +12,7 @@
 #define SHA1_Update(sha_ptr,text,tsize)      tc_sha1_update((sha_ptr),(text),(tsize))
 #define SHA1_Final(md,sha_ptr)               tc_sha1_final((sha_ptr),(md))
 #define SHA1(text,tsize,md)                  tc_sha1((text),(tsize),(md))
-#define HMAC_SHA1(key,ksize, text,tsize,md)  tc_hmac_sha1((key),(ksize),(text),(tsize),(md))
+#define HMAC_SHA1(key,ksize,text,tsize,md)   tc_hmac_sha1((key),(ksize),(text),(tsize),(md))
 
 typedef struct tc_sha1_ctx {
   unsigned int count[2];
@@ -34,7 +34,7 @@ TC_EXPORT void* tc_hmac_sha1(const void* key, unsigned int ksize, const void* te
 #define SHA256_Update(sha_ptr,text,tsize)      tc_sha256_update((sha_ptr),(text),(tsize))
 #define SHA256_Final(md,sha_ptr)               tc_sha256_final((sha_ptr),(md))
 #define SHA256(text,tsize,md)                  tc_sha256((text),(tsize),(md))
-#define HMAC_SHA256(key,ksize, text,tsize,md)  tc_hmac_sha256((key),(ksize),(text),(tsize),(md))
+#define HMAC_SHA256(key,ksize,text,tsize,md)   tc_hmac_sha256((key),(ksize),(text),(tsize),(md))
 
 typedef struct tc_sha256_ctx {
   unsigned int state[8];
