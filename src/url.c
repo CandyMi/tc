@@ -45,7 +45,7 @@ static const char deindex[] = {
   -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,
 };
 
-int urlencode(const void *text, unsigned int tsize, unsigned char *md) {
+int tc_urlencode(const void *text, unsigned int tsize, unsigned char *md) {
   if (text == NULL || tsize == 0 || md == NULL)
     return 0;
 
@@ -66,7 +66,7 @@ int urlencode(const void *text, unsigned int tsize, unsigned char *md) {
   return (unsigned int)(data - md);
 }
 
-int urldecode(const void *text, unsigned int tsize, unsigned char *md) {
+int tc_urldecode(const void *text, unsigned int tsize, unsigned char *md) {
   if (text == NULL || tsize == 0 || md == NULL)
     return 0;
 

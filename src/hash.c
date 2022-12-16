@@ -8,7 +8,7 @@
 #define ivalue  (0x811c9dc5)
 
 
-int hashxor(const void* key, unsigned int ksize, const void* text, unsigned int tsize, unsigned char* md) {
+int tc_hashxor(const void* key, unsigned int ksize, const void* text, unsigned int tsize, unsigned char* md) {
   if (text == NULL || tsize == 0 || key == NULL || ksize == 0 || md == NULL)
     return 0;
   
@@ -19,7 +19,7 @@ int hashxor(const void* key, unsigned int ksize, const void* text, unsigned int 
   return tsize;
 }
 
-int hashkey(const void* text, unsigned int tsize, unsigned char md[HASHKEY_LENGTH]) {
+int tc_hashkey(const void* text, unsigned int tsize, unsigned char md[HASHKEY_LENGTH]) {
   if (text == NULL || tsize == 0 || md == NULL)
     return 0;
 

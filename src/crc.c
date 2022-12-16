@@ -72,7 +72,7 @@ static uint32_t crc32_tab[] = {
   0xb40bbe37L, 0xc30c8ea1L, 0x5a05df1bL, 0x2d02ef8dL,
 };
 
-unsigned int crc32(const void *text, unsigned int tsize) {
+unsigned int tc_crc32(const void *text, unsigned int tsize) {
   if (!text || tsize == 0)
     return 0;
   

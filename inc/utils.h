@@ -5,15 +5,15 @@
 ** crc-32 **
 */
 
-#define crc32 crc32
-TC_EXPORT unsigned int crc32(const void *text, unsigned int tsize);
+#define crc32 tc_crc32
+TC_EXPORT unsigned int tc_crc32(const void *text, unsigned int tsize);
 
 /*
 ** adler-32 **
 */
 
-#define adler32 adler32
-TC_EXPORT unsigned int adler32(const void *text, unsigned int tsize);
+#define adler32 tc_adler32
+TC_EXPORT unsigned int tc_adler32(const void *text, unsigned int tsize);
 
 /*
 ** HEX **
@@ -32,11 +32,11 @@ enum tc_hex_t {
 #define HEX_DEC_LENGTH(len) ((len >> 1) + 1)
 
 /* hexencode `md` is tsize * 2 */
-#define hexencode hexencode
-TC_EXPORT int hexencode(const void* text, unsigned int tsize, unsigned char *md, int mode);
+#define hexencode tc_hexencode
+TC_EXPORT int tc_hexencode(const void* text, unsigned int tsize, unsigned char *md, int mode);
 /* hexdecode `md` is tsize / 2 */
-#define hexdecode hexdecode
-TC_EXPORT int hexdecode(const void* text, unsigned int  tsize, unsigned char *md);
+#define hexdecode tc_hexdecode
+TC_EXPORT int tc_hexdecode(const void* text, unsigned int  tsize, unsigned char *md);
 
 /*
 ** URL **
@@ -47,10 +47,10 @@ TC_EXPORT int hexdecode(const void* text, unsigned int  tsize, unsigned char *md
 /* Calculate the `decode` buffer length */
 #define URL_DEC_LENGTH(len) ((len) + 1)
 
-#define urlencode urlencode
-TC_EXPORT int urlencode(const void *text, unsigned int tsize, unsigned char *md);
-#define urldecode urldecode
-TC_EXPORT int urldecode(const void *text, unsigned int tsize, unsigned char *md);
+#define urlencode tc_urlencode
+TC_EXPORT int tc_urlencode(const void *text, unsigned int tsize, unsigned char *md);
+#define urldecode tc_urldecode
+TC_EXPORT int tc_urldecode(const void *text, unsigned int tsize, unsigned char *md);
 
 /*
 ** BASE64 **
@@ -70,11 +70,11 @@ enum tc_b64_t {
 /* Calculate the `decode` buffer length */
 #define BASE64_DEC_LENGTH(len) (((len + 3) / 4 * 3) + 1)
 
-#define base64encode base64encode
-TC_EXPORT int base64encode(const void* text, unsigned int tsize, unsigned char *md, int mode);
+#define base64encode tc_base64encode
+TC_EXPORT int tc_base64encode(const void* text, unsigned int tsize, unsigned char *md, int mode);
 
-#define base64decode base64decode
-TC_EXPORT int base64decode(const void* text, unsigned int tsize, unsigned char *md, int mode);
+#define base64decode tc_base64decode
+TC_EXPORT int tc_base64decode(const void* text, unsigned int tsize, unsigned char *md, int mode);
 
 /*
 ** Random key **
@@ -95,10 +95,10 @@ TC_EXPORT int tc_randomkey(unsigned char *rbuf, unsigned int rsize);
 #define HASHKEY_LENGTH      (8)
 #define HASHXOR_LENGTH(len) (len)
 
-#define hashkey hashkey
-TC_EXPORT int hashkey(const void* text, unsigned int tsize, unsigned char md[HASHKEY_LENGTH]);
+#define hashkey tc_hashkey
+TC_EXPORT int tc_hashkey(const void* text, unsigned int tsize, unsigned char md[HASHKEY_LENGTH]);
 
-#define hashxor hashxor
-TC_EXPORT int hashxor(const void* key, unsigned int ksize, const void* text, unsigned int tsize, unsigned char* md);
+#define hashxor tc_hashxor
+TC_EXPORT int tc_hashxor(const void* key, unsigned int ksize, const void* text, unsigned int tsize, unsigned char* md);
 
 #endif

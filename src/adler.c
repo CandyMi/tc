@@ -4,7 +4,7 @@
 */
 #include <tc.h>
 
-unsigned int adler32(const void *text, unsigned int tsize) {
+unsigned int tc_adler32(const void *text, unsigned int tsize) {
   if (!text || tsize == 0)
     return 0;
   uint32_t sum = 0;
