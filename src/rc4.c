@@ -11,7 +11,7 @@ int tc_rc4_set_key(RC4_KEY *key, const void *text, unsigned int tsize) {
 
   register uint32_t tmp;
   register uint32_t *d;
-  register size_t id1, id2, i;
+  register uint32_t id1, id2, i;
 
   id1 = id2 = 0;
   d = &(key->data[0]);
@@ -46,7 +46,7 @@ void* tc_rc4(RC4_KEY *key, const void *text, unsigned int tsize, unsigned char *
     eof = 1;
   }
 
-  uint32_t *d; size_t i;
+  uint32_t *d; uint32_t i;
   uint32_t x, y, tx, ty;
 
   const unsigned char *indata  = text;
