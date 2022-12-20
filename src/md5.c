@@ -148,7 +148,7 @@ static inline void tc_md5_transform(unsigned int state[4], const unsigned char b
 int tc_md5_init(MD5_CTX *context) {
   if (context == NULL)
     return 0;
-  memset(context, 0x0, sizeof(MD5_CTX));
+
   context->count[0] = 0;
   context->count[1] = 0;
   context->state[0] = H1;
@@ -212,51 +212,6 @@ void* tc_md5(const void* text, unsigned int tsize, unsigned char md[MD5_DIGEST_L
   tc_md5_init(&context);
   tc_md5_update(&context, text, tsize);
   tc_md5_final(&context, md);
-
-  return md;
-}
-
-static inline void xor_key(uint8_t key[MD5_BLOCK_SIZE], uint32_t xor) {
-	int i;
-	for (i=0; i<MD5_BLOCK_SIZE; i += sizeof(uint32_t)) {
-		uint32_t * k = (uint32_t *)&key[i];
-		*k ^= xor;
-	}
-}
-
-void* tc_hmac_md5(const void* key, unsigned int ksize, const void* text, unsigned int tsize, unsigned char md[MD5_DIGEST_LENGTH]) {
-  if (text == NULL || tsize == 0)
-    return NULL;
-
-  if (!md)
-    md = tc_xmalloc(MD5_DIGEST_LENGTH);
-
-  uint8_t buf[MD5_BLOCK_SIZE];
-  memset(buf, 0x0, MD5_BLOCK_SIZE);
-
-  if (ksize > MD5_BLOCK_SIZE) {
-    tc_md5(key, ksize, buf);
-    ksize = MD5_DIGEST_LENGTH;
-  } else {
-    memcpy(buf, key, ksize);
-  }
-
-  xor_key(buf, 0x5c5c5c5c);
-
-  MD5_CTX ctx1;
-  tc_md5_init(&ctx1);
-  tc_md5_update(&ctx1, buf, MD5_BLOCK_SIZE);
-
-  xor_key(buf, 0x5c5c5c5c ^ 0x36363636);
-
-  MD5_CTX ctx2;
-  tc_md5_init(&ctx2);
-  tc_md5_update(&ctx2, buf, MD5_BLOCK_SIZE);
-  tc_md5_update(&ctx2, text, tsize);
-  tc_md5_final(&ctx2, md);
-
-  tc_md5_update(&ctx1, md, MD5_DIGEST_LENGTH);
-  tc_md5_final(&ctx1, md);
 
   return md;
 }

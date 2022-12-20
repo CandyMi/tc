@@ -19,12 +19,12 @@ TC_EXPORT unsigned int tc_adler32(const void *text, unsigned int tsize);
 ** HEX **
 */
 
-enum tc_hex_t {
+typedef enum tc_hex_t {
 #define tc_hex_lower tc_hex_lower
   tc_hex_lower = 0, // lower case
 #define tc_hex_upper tc_hex_upper
   tc_hex_upper = 1, // upper case
-};
+} tc_hex_t;
 
 /* Calculate the `encode` buffer length */
 #define HEX_ENC_LENGTH(len) ((len << 1) + 1)
@@ -33,7 +33,7 @@ enum tc_hex_t {
 
 /* hexencode `md` is tsize * 2 */
 #define hexencode tc_hexencode
-TC_EXPORT int tc_hexencode(const void* text, unsigned int tsize, unsigned char *md, int mode);
+TC_EXPORT int tc_hexencode(const void* text, unsigned int tsize, unsigned char *md, tc_hex_t mode);
 /* hexdecode `md` is tsize / 2 */
 #define hexdecode tc_hexdecode
 TC_EXPORT int tc_hexdecode(const void* text, unsigned int  tsize, unsigned char *md);
@@ -56,14 +56,14 @@ TC_EXPORT int tc_urldecode(const void *text, unsigned int tsize, unsigned char *
 ** BASE64 **
 */
 
-enum tc_b64_t {
+typedef enum tc_b64_t {
 #define tc_b64_non tc_b64_non
   tc_b64_non       = 0,
 #define tc_b64_url tc_b64_url
   tc_b64_url       = 1,
 #define tc_b64_nopadding tc_b64_nopadding
   tc_b64_nopadding = 2,
-};
+} tc_b64_t;
 
 /* Calculate the `encode` buffer length */
 #define BASE64_ENC_LENGTH(len) ((((len) + 2) / 3 * 4) + 1)
@@ -71,10 +71,10 @@ enum tc_b64_t {
 #define BASE64_DEC_LENGTH(len) (((len + 3) / 4 * 3) + 1)
 
 #define base64encode tc_base64encode
-TC_EXPORT int tc_base64encode(const void* text, unsigned int tsize, unsigned char *md, int mode);
+TC_EXPORT int tc_base64encode(const void* text, unsigned int tsize, unsigned char *md, tc_b64_t mode);
 
 #define base64decode tc_base64decode
-TC_EXPORT int tc_base64decode(const void* text, unsigned int tsize, unsigned char *md, int mode);
+TC_EXPORT int tc_base64decode(const void* text, unsigned int tsize, unsigned char *md, tc_b64_t mode);
 
 /*
 ** Random key **
@@ -100,5 +100,16 @@ TC_EXPORT int tc_hashkey(const void* text, unsigned int tsize, unsigned char md[
 
 #define hashxor tc_hashxor
 TC_EXPORT int tc_hashxor(const void* key, unsigned int ksize, const void* text, unsigned int tsize, unsigned char* md);
+
+/*
+**  PBKDF2
+*/
+typedef enum tc_sign_method_t{
+  TC_MD5    = 0,
+  TC_SHA128 = 1,
+  TC_SHA256 = 2,
+} tc_sign_method_t;
+
+TC_EXPORT int tc_pbkdf2(tc_sign_method_t mode, const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, char* out);
 
 #endif

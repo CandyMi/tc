@@ -134,7 +134,7 @@ static inline void tc_sha1_transform(unsigned int state[5], const unsigned char 
 int tc_sha1_init(SHA_CTX *context) {
   if (context == NULL)
     return 0;
-  memset(context, 0, sizeof(SHA_CTX));
+
   context->count[0] = 0;
   context->count[1] = 0;
   context->state[0] = H1;
@@ -210,51 +210,6 @@ void* tc_sha1(const void* text, unsigned int tsize, unsigned char md[SHA_DIGEST_
   tc_sha1_init(&context);
   tc_sha1_update(&context, text, tsize);
   tc_sha1_final(&context, md);
-
-  return md;
-}
-
-static inline void xor_key(uint8_t key[SHA_BLOCK_SIZE], uint32_t xor) {
-  int i;
-  for (i=0; i < SHA_BLOCK_SIZE; i += sizeof(uint32_t)) {
-    uint32_t * k = (uint32_t *)&key[i];
-    *k ^= xor;
-  }
-}
-
-void* tc_hmac_sha1(const void* key, unsigned int ksize, const void* text, unsigned int tsize, unsigned char md[SHA_DIGEST_LENGTH]) {
-  if (text == NULL || tsize == 0)
-    return NULL;
-
-  if (!md)
-    md = tc_xmalloc(SHA_DIGEST_LENGTH);
-
-  uint8_t buf[SHA_BLOCK_SIZE];
-  memset(buf, 0x0, SHA_BLOCK_SIZE);
-
-  if (ksize > SHA_BLOCK_SIZE) {
-    tc_sha1(key, ksize, buf);
-    ksize = SHA_DIGEST_LENGTH;
-  } else {
-    memcpy(buf, key, ksize);
-  }
-
-  xor_key(buf, 0x5c5c5c5c);
-
-  SHA_CTX ctx1;
-  tc_sha1_init(&ctx1);
-  tc_sha1_update(&ctx1, buf, SHA_BLOCK_SIZE);
-
-  xor_key(buf, 0x5c5c5c5c ^ 0x36363636);
-
-  SHA_CTX ctx2;
-  tc_sha1_init(&ctx2);
-  tc_sha1_update(&ctx2, buf, SHA_BLOCK_SIZE);
-  tc_sha1_update(&ctx2, text, tsize);
-  tc_sha1_final(&ctx2, md);
-
-  tc_sha1_update(&ctx1, md, SHA_DIGEST_LENGTH);
-  tc_sha1_final(&ctx1, md);
 
   return md;
 }
