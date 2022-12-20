@@ -40,10 +40,10 @@ int tc_hashkey(const void* text, unsigned int tsize, unsigned char md[HASHKEY_LE
     hash2 ^= code;
   }
 
-  md[0] = hash1 >> 24;  md[1] = hash2 >> 24;
-  md[2] = hash1 >> 16;  md[3] = hash2 >> 16;
-  md[4] = hash1 >>  8;  md[5] = hash2 >>  8;
-  md[6] = hash1 & 0xff; md[7] = hash2 & 0xff;
+  md[0] = (uint8_t)(hash1 >> 24) & 0xff;  md[1] = (uint8_t)(hash2 >> 24) & 0xff;
+  md[2] = (uint8_t)(hash1 >> 16) & 0xff;  md[3] = (uint8_t)(hash2 >> 16) & 0xff;
+  md[4] = (uint8_t)(hash1 >>  8) & 0xff;  md[5] = (uint8_t)(hash2 >>  8) & 0xff;
+  md[6] = (uint8_t)hash1 & 0xff;          md[7] = (uint8_t)hash2 & 0xff;
 
   return 1;
 }

@@ -110,6 +110,6 @@ typedef enum tc_sign_method_t{
   TC_SHA256 = 2,
 } tc_sign_method_t;
 
-TC_EXPORT int tc_pbkdf2(tc_sign_method_t mode, const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, char* out);
+TC_EXPORT int tc_pbkdf2(tc_sign_method_t mode, const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, unsigned char* out);
 
 #endif

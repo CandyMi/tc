@@ -19,7 +19,7 @@ static inline void tc_init_counter(char c[4], unsigned long counter) {
   c[3] = (counter >> 0)  & 0xff;
 }
 
-static inline int tc_pbkdf2_md5(const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, char out[MD5_DIGEST_LENGTH]) {
+static inline int tc_pbkdf2_md5(const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, unsigned char out[MD5_DIGEST_LENGTH]) {
   pbkdf2_check_error(password, plen, salt, slen, count);
   
   MD5_CTX context;
@@ -50,7 +50,7 @@ static inline int tc_pbkdf2_md5(const void* password, unsigned int plen, const v
   return MD5_DIGEST_LENGTH;
 }
 
-static inline int tc_pbkdf2_sha128(const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, char out[SHA_DIGEST_LENGTH]) {
+static inline int tc_pbkdf2_sha128(const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, unsigned char out[SHA_DIGEST_LENGTH]) {
   pbkdf2_check_error(password, plen, salt, slen, count);
 
   SHA_CTX context;
@@ -81,7 +81,7 @@ static inline int tc_pbkdf2_sha128(const void* password, unsigned int plen, cons
   return SHA_DIGEST_LENGTH;
 }
 
-static inline int tc_pbkdf2_sha256(const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, char out[SHA256_DIGEST_LENGTH]) {
+static inline int tc_pbkdf2_sha256(const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, unsigned char out[SHA256_DIGEST_LENGTH]) {
   pbkdf2_check_error(password, plen, salt, slen, count);
 
   SHA256_CTX context;
@@ -112,7 +112,7 @@ static inline int tc_pbkdf2_sha256(const void* password, unsigned int plen, cons
   return SHA256_DIGEST_LENGTH;
 }
 
-int tc_pbkdf2(tc_sign_method_t mode, const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, char* out) {
+int tc_pbkdf2(tc_sign_method_t mode, const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, unsigned char* out) {
   switch (mode)
   {
     case TC_MD5:

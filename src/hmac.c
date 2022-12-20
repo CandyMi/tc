@@ -8,7 +8,7 @@
 /*  =========================== HMAC-MD5 ===========================  */
 
 int tc_hmac_md5_init(MD5_CTX *context, const void* key, unsigned int klen) {
-  char mkey[MD5_DIGEST_LENGTH];
+  unsigned char mkey[MD5_DIGEST_LENGTH];
   if (klen > MD5_BLOCK_SIZE) {
     tc_md5(key, klen, mkey);
     key = mkey;
@@ -62,7 +62,7 @@ void* tc_hmac_md5(const void* key, unsigned int ksize, const void* text, unsigne
 /*  =========================== HMAC-SHA-128 ===========================  */
 
 int tc_hmac_sha1_init(SHA_CTX *context, const void* key, unsigned int klen) {
-  char mkey[SHA_DIGEST_LENGTH];
+  unsigned char mkey[SHA_DIGEST_LENGTH];
   if (klen > SHA_BLOCK_SIZE) {
     tc_sha1(key, klen, mkey);
     key = mkey;
@@ -116,7 +116,7 @@ void* tc_hmac_sha1(const void* key, unsigned int ksize, const void* text, unsign
 /*  =========================== HMAC-SHA-256 =========================== */
 
 int tc_hmac_sha256_init(SHA256_CTX *context, const void* key, unsigned int klen) {
-  char mkey[SHA256_DIGEST_LENGTH];
+  unsigned char mkey[SHA256_DIGEST_LENGTH];
   if (klen > SHA256_BLOCK_SIZE) {
     tc_sha256(key, klen, mkey);
     key = mkey;
