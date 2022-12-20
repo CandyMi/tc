@@ -199,23 +199,20 @@ int tc_md5_final(MD5_CTX *context, unsigned char md[MD5_DIGEST_LENGTH]) {
   return 1;
 }
 
-void* tc_md5(const void* text, unsigned int tsize, unsigned char md[MD5_DIGEST_LENGTH]) {
-  if (text == NULL || tsize == 0)
-    return NULL;
+static char digest[] = "\xd4\x1d\x8c\xd9\x8f\x00\xb2\x04\xe9\x80\x09\x98\xec\xf8\x42\x7e";
 
-  int eof = 0;
-  if (!md){
-    md = tc_xmalloc(MD5_DIGEST_LENGTH + 1);
-    eof = 1;
-  }
+void* tc_md5(const void* text, unsigned int tsize, unsigned char md[MD5_DIGEST_LENGTH]) {
+  if (!md)
+    md = tc_xmalloc(MD5_DIGEST_LENGTH);
+
+  if (text == NULL || tsize == 0)
+    return memcpy(md, digest, MD5_DIGEST_LENGTH);
 
   MD5_CTX context;
   tc_md5_init(&context);
   tc_md5_update(&context, text, tsize);
   tc_md5_final(&context, md);
 
-  if (eof)
-    md[MD5_DIGEST_LENGTH] = '\x00';
   return md;
 }
 
@@ -231,11 +228,8 @@ void* tc_hmac_md5(const void* key, unsigned int ksize, const void* text, unsigne
   if (text == NULL || tsize == 0)
     return NULL;
 
-  int eof = 0;
-  if (!md){
-    md = tc_xmalloc(MD5_DIGEST_LENGTH + 1);
-    eof = 1;
-  }
+  if (!md)
+    md = tc_xmalloc(MD5_DIGEST_LENGTH);
 
   uint8_t buf[MD5_BLOCK_SIZE];
   memset(buf, 0x0, MD5_BLOCK_SIZE);
@@ -264,7 +258,5 @@ void* tc_hmac_md5(const void* key, unsigned int ksize, const void* text, unsigne
   tc_md5_update(&ctx1, md, MD5_DIGEST_LENGTH);
   tc_md5_final(&ctx1, md);
 
-  if (eof)
-    md[MD5_DIGEST_LENGTH] = '\x00';
   return md;
 }

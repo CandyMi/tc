@@ -197,23 +197,20 @@ void tc_sha1_final(SHA_CTX *context, unsigned char md[SHA_DIGEST_LENGTH]) {
   memset(finalcount, 0, 8);    /* SWR */
 }
 
-void* tc_sha1(const void* text, unsigned int tsize, unsigned char md[SHA_DIGEST_LENGTH]) {
-  if (text == NULL || tsize == 0)
-    return NULL;
+static char digest[] = "\xda\x39\xa3\xee\x5e\x6b\x4b\x0d\x32\x55\xbf\xef\x95\x60\x18\x90\xaf\xd8\x07\x09";
 
-  int eof = 0;
-  if (!md){
-    md = tc_xmalloc(SHA_DIGEST_LENGTH + 1);
-    eof = 1;
-  }
+void* tc_sha1(const void* text, unsigned int tsize, unsigned char md[SHA_DIGEST_LENGTH]) {
+  if (!md)
+    md = tc_xmalloc(SHA_DIGEST_LENGTH);
+
+  if (text == NULL || tsize == 0)
+    return memcpy(md, digest, SHA_DIGEST_LENGTH);
 
   SHA_CTX context;
   tc_sha1_init(&context);
   tc_sha1_update(&context, text, tsize);
   tc_sha1_final(&context, md);
 
-  if (eof)
-    md[SHA_DIGEST_LENGTH] = '\x00';
   return md;
 }
 
@@ -229,11 +226,8 @@ void* tc_hmac_sha1(const void* key, unsigned int ksize, const void* text, unsign
   if (text == NULL || tsize == 0)
     return NULL;
 
-  int eof = 0;
-  if (!md){
-    md = tc_xmalloc(SHA_DIGEST_LENGTH + 1);
-    eof = 1;
-  }
+  if (!md)
+    md = tc_xmalloc(SHA_DIGEST_LENGTH);
 
   uint8_t buf[SHA_BLOCK_SIZE];
   memset(buf, 0x0, SHA_BLOCK_SIZE);
@@ -262,7 +256,5 @@ void* tc_hmac_sha1(const void* key, unsigned int ksize, const void* text, unsign
   tc_sha1_update(&ctx1, md, SHA_DIGEST_LENGTH);
   tc_sha1_final(&ctx1, md);
 
-  if (eof)
-    md[SHA_DIGEST_LENGTH] = '\x00';
   return md;
 }

@@ -204,23 +204,20 @@ void tc_sha256_final(SHA256_CTX* context, unsigned char md[SHA256_DIGEST_LENGTH]
   tc_sha256_init(context);
 }
 
-void* tc_sha256(const void* text, unsigned int tsize, unsigned char md[SHA256_DIGEST_LENGTH]) {
-  if (text == NULL || tsize == 0)
-    return NULL;
+static char digest[] = "\xe3\xb0\xc4\x42\x98\xfc\x1c\x14\x9a\xfb\xf4\xc8\x99\x6f\xb9\x24\x27\xae\x41\xe4\x64\x9b\x93\x4c\xa4\x95\x99\x1b\x78\x52\xb8\x55";
 
-  int eof = 0;
-  if (!md){
-    md = tc_xmalloc(SHA256_DIGEST_LENGTH + 1);
-    eof = 1;
-  }
+void* tc_sha256(const void* text, unsigned int tsize, unsigned char md[SHA256_DIGEST_LENGTH]) {
+  if (!md)
+    md = tc_xmalloc(SHA256_DIGEST_LENGTH);
+
+  if (text == NULL || tsize == 0)
+    return memcpy(md, digest, MD5_DIGEST_LENGTH);
 
   SHA256_CTX context;
   tc_sha256_init(&context);
   tc_sha256_update(&context, text, tsize);
   tc_sha256_final(&context, md);
 
-  if (eof)
-    md[SHA256_DIGEST_LENGTH] = '\x00';
   return md;
 }
 
@@ -234,13 +231,10 @@ static inline void xor_key(uint8_t key[SHA256_BLOCK_SIZE], uint32_t xor) {
 
 void* tc_hmac_sha256(const void* key, unsigned int ksize, const void* text, unsigned int tsize, unsigned char md[SHA256_DIGEST_LENGTH]) {
   if (text == NULL || tsize == 0)
-    return NULL; 
+    return NULL;
 
-  int eof = 0;
-  if (!md){
-    md = tc_xmalloc(SHA256_DIGEST_LENGTH + 1);
-    eof = 1;
-  }
+  if (!md)
+    md = tc_xmalloc(SHA256_DIGEST_LENGTH);
 
   uint8_t buf[SHA256_BLOCK_SIZE];
   memset(buf, 0x0, SHA256_BLOCK_SIZE);
@@ -269,7 +263,5 @@ void* tc_hmac_sha256(const void* key, unsigned int ksize, const void* text, unsi
   tc_sha256_update(&ctx1, md, SHA256_DIGEST_LENGTH);
   tc_sha256_final(&ctx1, md);
 
-  if (eof)
-    md[SHA256_DIGEST_LENGTH] = '\x00';
   return md;
 }
