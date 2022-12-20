@@ -49,7 +49,7 @@ void* tc_hmac_md5(const void* key, unsigned int ksize, const void* text, unsigne
     return NULL;
 
   if (!md)
-    md = tc_xmalloc(SHA_DIGEST_LENGTH);
+    md = tc_xmalloc(MD5_DIGEST_LENGTH);
 
   MD5_CTX context;
   tc_hmac_md5_init(&context, key, ksize);

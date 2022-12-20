@@ -211,7 +211,7 @@ void* tc_sha256(const void* text, unsigned int tsize, unsigned char md[SHA256_DI
     md = tc_xmalloc(SHA256_DIGEST_LENGTH);
 
   if (text == NULL || tsize == 0)
-    return memcpy(md, digest, MD5_DIGEST_LENGTH);
+    return memcpy(md, digest, SHA256_DIGEST_LENGTH);
 
   SHA256_CTX context;
   tc_sha256_init(&context);
