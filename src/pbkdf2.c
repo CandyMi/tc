@@ -4,6 +4,14 @@
 */
 #include <tc.h>
 
+#define pbkdf2_check_error(p, plen, s, slen, c) \
+  if (!(p) || (plen) == 0)                      \
+    return -2;                                  \
+  if (!(s) || (slen) == 0)                      \
+    return -3;                                  \
+  if ((c) == 0)                                 \
+    return -4
+
 static inline void tc_init_counter(char c[4], unsigned long counter) {
   c[0] = (counter >> 24) & 0xff;
   c[1] = (counter >> 16) & 0xff;
@@ -11,49 +19,108 @@ static inline void tc_init_counter(char c[4], unsigned long counter) {
   c[3] = (counter >> 0)  & 0xff;
 }
 
-
 static inline int tc_pbkdf2_md5(const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, char out[MD5_DIGEST_LENGTH]) {
-  if (!password || plen == 0)
-    return -2;
-  if (!salt || slen == 0)
-    return -3;
-  if (count == 0)
-    return -4;
+  pbkdf2_check_error(password, plen, salt, slen, count);
+  
+  MD5_CTX context;
+  tc_md5_init(&context);
 
+  char c[4]; unsigned long counter = 1;
+  tc_init_counter(c, counter);
+
+  tc_hmac_md5_init(&context, password, plen);
+  tc_hmac_md5_update(&context, salt, slen);
+  tc_hmac_md5_update(&context, c, 4);
+  tc_hmac_md5_final(&context, out);
+
+  if (count > 1) {
+    char tmp[MD5_DIGEST_LENGTH];
+    memcpy(tmp, out, MD5_DIGEST_LENGTH);
+    for (unsigned int i = 1; i < count; i++) {
+
+      tc_hmac_md5_init(&context, password, plen);
+      tc_hmac_md5_update(&context, out, MD5_DIGEST_LENGTH);
+      tc_hmac_md5_final(&context, out);
+
+      for (unsigned int j = 0; j < MD5_DIGEST_LENGTH; j++)
+        tmp[j] ^= out[j];
+    }
+    memcpy(out, tmp, MD5_DIGEST_LENGTH);
+  }
   return MD5_DIGEST_LENGTH;
 }
 
 static inline int tc_pbkdf2_sha128(const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, char out[SHA_DIGEST_LENGTH]) {
-  if (!password || plen == 0)
-    return -2;
-  if (!salt || slen == 0)
-    return -3;
-  if (count == 0)
-    return -4;
+  pbkdf2_check_error(password, plen, salt, slen, count);
 
+  SHA_CTX context;
+  tc_sha1_init(&context);
+
+  char c[4]; unsigned long counter = 1;
+  tc_init_counter(c, counter);
+
+  tc_hmac_sha1_init(&context, password, plen);
+  tc_hmac_sha1_update(&context, salt, slen);
+  tc_hmac_sha1_update(&context, c, 4);
+  tc_hmac_sha1_final(&context, out);
+
+  if (count > 1) {
+    char tmp[SHA_DIGEST_LENGTH];
+    memcpy(tmp, out, SHA_DIGEST_LENGTH);
+    for (unsigned int i = 1; i < count; i++) {
+
+      tc_hmac_sha1_init(&context, password, plen);
+      tc_hmac_sha1_update(&context, out, SHA_DIGEST_LENGTH);
+      tc_hmac_sha1_final(&context, out);
+
+      for (unsigned int j = 0; j < SHA_DIGEST_LENGTH; j++)
+        tmp[j] ^= out[j];
+    }
+    memcpy(out, tmp, SHA_DIGEST_LENGTH);
+  }
   return SHA_DIGEST_LENGTH;
 }
 
 static inline int tc_pbkdf2_sha256(const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, char out[SHA256_DIGEST_LENGTH]) {
-  if (!password || plen == 0)
-    return -2;
-  if (!salt || slen == 0)
-    return -3;
-  if (count == 0)
-    return -4;
+  pbkdf2_check_error(password, plen, salt, slen, count);
 
+  SHA256_CTX context;
+  tc_sha256_init(&context);
+
+  char c[4]; unsigned long counter = 1;
+  tc_init_counter(c, counter);
+
+  tc_hmac_sha256_init(&context, password, plen);
+  tc_hmac_sha256_update(&context, salt, slen);
+  tc_hmac_sha256_update(&context, c, 4);
+  tc_hmac_sha256_final(&context, out);
+
+  if (count > 1) {
+    char tmp[SHA256_DIGEST_LENGTH];
+    memcpy(tmp, out, SHA256_DIGEST_LENGTH);
+    for (unsigned int i = 1; i < count; i++) {
+
+      tc_hmac_sha256_init(&context, password, plen);
+      tc_hmac_sha256_update(&context, out, SHA256_DIGEST_LENGTH);
+      tc_hmac_sha256_final(&context, out);
+
+      for (unsigned int j = 0; j < SHA256_DIGEST_LENGTH; j++)
+        tmp[j] ^= out[j];
+    }
+    memcpy(out, tmp, SHA256_DIGEST_LENGTH);
+  }
   return SHA256_DIGEST_LENGTH;
 }
 
-int tc_pbkdf2(tc_sign_t mode, const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, char* out) {
+int tc_pbkdf2(tc_sign_method_t mode, const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, char* out) {
   switch (mode)
   {
-  case TC_MD5:
-    return tc_pbkdf2_md5(password, plen, salt, slen, count, out);
-  case TC_SHA128:
-    return tc_pbkdf2_sha128(password, plen, salt, slen, count, out);
-  case TC_SHA256:
-    return tc_pbkdf2_sha256(password, plen, salt, slen, count, out);
+    case TC_MD5:
+      return tc_pbkdf2_md5(password, plen, salt, slen, count, out);
+    case TC_SHA128:
+      return tc_pbkdf2_sha128(password, plen, salt, slen, count, out);
+    case TC_SHA256:
+      return tc_pbkdf2_sha256(password, plen, salt, slen, count, out);
   }
   return -1;
 }

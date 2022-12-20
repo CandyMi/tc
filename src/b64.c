@@ -43,7 +43,7 @@ static inline uint8_t decoder(uint8_t ch, int32_t urlsafe) {
   return b64code_idx[ch];
 }
 
-int tc_base64encode(const void* text, unsigned int tsize, unsigned char *md, int mode) {
+int tc_base64encode(const void* text, unsigned int tsize, unsigned char *md, tc_b64_t mode) {
   if (text == NULL || tsize == 0 || md == NULL)
     return 0;
 
@@ -90,7 +90,7 @@ int tc_base64encode(const void* text, unsigned int tsize, unsigned char *md, int
   return index;
 }
 
-int tc_base64decode(const void* text, unsigned int tsize, unsigned char *md, int mode) {
+int tc_base64decode(const void* text, unsigned int tsize, unsigned char *md, tc_b64_t mode) {
   if (text == NULL || tsize == 0 || md == NULL)
     return 0;
 

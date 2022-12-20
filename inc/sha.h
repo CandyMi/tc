@@ -91,13 +91,4 @@ TC_EXPORT void  tc_hmac_sha256_update(SHA256_CTX* context, const void* text, uns
 TC_EXPORT void  tc_hmac_sha256_final(SHA256_CTX* context, unsigned char md[SHA256_DIGEST_LENGTH]);
 TC_EXPORT void* tc_hmac_sha256(const void* key, unsigned int ksize, const void* text, unsigned int tsize, unsigned char md[SHA256_DIGEST_LENGTH]);
 
-/* PBKDF2 */
-typedef enum tc_sign_t{
-  TC_MD5 = 0,
-  TC_SHA128,
-  TC_SHA256,
-} tc_sign_t;
-
-TC_EXPORT int tc_pbkdf2(tc_sign_t mode, const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, char* out);
-
 #endif

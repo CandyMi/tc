@@ -43,7 +43,7 @@ static const char deindex[256] = {
   -1,     -1,     -1,     -1,     -1,     -1,     -1,     -1,
 };
 
-int tc_hexencode(const void* text, unsigned int tsize, unsigned char *md, int mode) {
+int tc_hexencode(const void* text, unsigned int tsize, unsigned char *md, tc_hex_t mode) {
   if (text == NULL || tsize == 0 || md == NULL)
     return 0;
 
