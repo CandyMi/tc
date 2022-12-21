@@ -18,7 +18,8 @@ int tc_hmac_md5_init(MD5_CTX *context, const void* key, unsigned int klen) {
   memset(context->ipad, 0x36, MD5_BLOCK_SIZE);
   memset(context->opad, 0x5c, MD5_BLOCK_SIZE);
 
-  for (unsigned int i = 0; i < klen; i++) {
+  unsigned int i;
+  for (i = 0; i < klen; i++) {
     context->ipad[i] ^= ((uint8_t*)key)[i];
     context->opad[i] ^= ((uint8_t*)key)[i];
   }
@@ -72,7 +73,8 @@ int tc_hmac_sha1_init(SHA_CTX *context, const void* key, unsigned int klen) {
   memset(context->ipad, 0x36, SHA_BLOCK_SIZE);
   memset(context->opad, 0x5c, SHA_BLOCK_SIZE);
 
-  for (unsigned int i = 0; i < klen; i++) {
+  unsigned int i;
+  for (i = 0; i < klen; i++) {
     context->ipad[i] ^= ((uint8_t*)key)[i];
     context->opad[i] ^= ((uint8_t*)key)[i];
   }
@@ -126,7 +128,8 @@ int tc_hmac_sha256_init(SHA256_CTX *context, const void* key, unsigned int klen)
   memset(context->ipad, 0x36, SHA256_BLOCK_SIZE);
   memset(context->opad, 0x5c, SHA256_BLOCK_SIZE);
 
-  for (unsigned int i = 0; i < klen; i++) {
+  unsigned int i;
+  for (i = 0; i < klen; i++) {
     context->ipad[i] ^= ((uint8_t*)key)[i];
     context->opad[i] ^= ((uint8_t*)key)[i];
   }

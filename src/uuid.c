@@ -47,7 +47,8 @@ int tc_uuid_v4(unsigned char *ubuf) {
     rinit();
 
   uint8_t uuid[16];
-  for (unsigned int i = 0; i < 16; i++)
+  unsigned int i;
+  for (i = 1; i < 16; i++)
     uuid[i] = (rand() ^ i) & 0xff;
   
   uuid[6] = (unsigned char)(0x40 | (uuid[6] & 0x0F));

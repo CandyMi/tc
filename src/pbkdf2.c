@@ -26,13 +26,14 @@ static inline int tc_pbkdf2_md5(const void* password, unsigned int plen, const v
   if (count > 1) {
     char tmp[MD5_DIGEST_LENGTH];
     memcpy(tmp, out, MD5_DIGEST_LENGTH);
-    for (unsigned int i = 1; i < count; i++) {
+    unsigned int i, j;
+    for (i = 1; i < count; i++) {
 
       tc_hmac_md5_init(&context, password, plen);
       tc_hmac_md5_update(&context, out, MD5_DIGEST_LENGTH);
       tc_hmac_md5_final(&context, out);
 
-      for (unsigned int j = 0; j < MD5_DIGEST_LENGTH; j++)
+      for (j = 0; j < MD5_DIGEST_LENGTH; j++)
         tmp[j] ^= out[j];
     }
     memcpy(out, tmp, MD5_DIGEST_LENGTH);
@@ -54,13 +55,14 @@ static inline int tc_pbkdf2_sha128(const void* password, unsigned int plen, cons
   if (count > 1) {
     char tmp[SHA_DIGEST_LENGTH];
     memcpy(tmp, out, SHA_DIGEST_LENGTH);
-    for (unsigned int i = 1; i < count; i++) {
+    unsigned int i, j;
+    for (i = 1; i < count; i++) {
 
       tc_hmac_sha1_init(&context, password, plen);
       tc_hmac_sha1_update(&context, out, SHA_DIGEST_LENGTH);
       tc_hmac_sha1_final(&context, out);
 
-      for (unsigned int j = 0; j < SHA_DIGEST_LENGTH; j++)
+      for (j = 0; j < SHA_DIGEST_LENGTH; j++)
         tmp[j] ^= out[j];
     }
     memcpy(out, tmp, SHA_DIGEST_LENGTH);
@@ -82,13 +84,14 @@ static inline int tc_pbkdf2_sha256(const void* password, unsigned int plen, cons
   if (count > 1) {
     char tmp[SHA256_DIGEST_LENGTH];
     memcpy(tmp, out, SHA256_DIGEST_LENGTH);
-    for (unsigned int i = 1; i < count; i++) {
+    unsigned int i, j;
+    for (i = 1; i < count; i++) {
 
       tc_hmac_sha256_init(&context, password, plen);
       tc_hmac_sha256_update(&context, out, SHA256_DIGEST_LENGTH);
       tc_hmac_sha256_final(&context, out);
 
-      for (unsigned int j = 0; j < SHA256_DIGEST_LENGTH; j++)
+      for (j = 0; j < SHA256_DIGEST_LENGTH; j++)
         tmp[j] ^= out[j];
     }
     memcpy(out, tmp, SHA256_DIGEST_LENGTH);
