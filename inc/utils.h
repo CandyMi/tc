@@ -92,6 +92,7 @@ TC_EXPORT int tc_randomkey(unsigned char *rbuf, unsigned int rsize);
 /*
 **  Hash
 */
+
 #define HASHKEY_LENGTH      (8)
 #define HASHXOR_LENGTH(len) (len)
 
@@ -104,6 +105,7 @@ TC_EXPORT int tc_hashxor(const void* key, unsigned int ksize, const void* text, 
 /*
 **  PBKDF2
 */
+
 typedef enum tc_sign_method_t{
   TC_MD5    = 0,
   TC_SHA128 = 1,

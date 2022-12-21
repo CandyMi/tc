@@ -190,12 +190,6 @@ int tc_sha1_final(SHA_CTX *context, unsigned char md[SHA_DIGEST_LENGTH]) {
   for (i = 0; i < SHA_DIGEST_LENGTH; i++)
     md[i] = (uint8_t) ((context->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
 
-  // /* Wipe variables */
-  // i = 0;
-  // memset(context->buffer, 0, 64);
-  // memset(context->state, 0, 20);
-  // memset(context->count, 0, 8);
-  // memset(finalcount, 0, 8);    /* SWR */
   return 1;
 }
 

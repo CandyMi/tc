@@ -160,7 +160,7 @@ int tc_md5_init(MD5_CTX *context) {
 
 int tc_md5_update(MD5_CTX *context, const void* text, unsigned int tsize) {
   if (context == NULL || text == NULL || tsize == 0)
-    return;
+    return 0;
 
   uint32_t i = 0, index = 0, partlen = 0;
   index = (context->count[0] >> 3) & 0x3F;
@@ -183,6 +183,7 @@ int tc_md5_update(MD5_CTX *context, const void* text, unsigned int tsize) {
   }
 
   memcpy(&context->buffer[index], ((uint8_t*)text) + i, tsize - i);
+  return 1;
 }
 
 int tc_md5_final(MD5_CTX *context, unsigned char md[MD5_DIGEST_LENGTH]) {

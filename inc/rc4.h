@@ -14,7 +14,7 @@ typedef struct tc_rc4_ctx {
   unsigned int data[256];
 } RC4_KEY;
 
-TC_EXPORT int tc_rc4_set_key(RC4_KEY *key, const void *text, unsigned int tsize);
+TC_EXPORT int   tc_rc4_set_key(RC4_KEY *key, const void *text, unsigned int tsize);
 TC_EXPORT void* tc_rc4(RC4_KEY *key, const void *text, unsigned int tsize, unsigned char *md);
 
 #endif

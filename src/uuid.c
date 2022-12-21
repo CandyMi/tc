@@ -45,30 +45,17 @@ int tc_uuid_v4(unsigned char *ubuf) {
     return 0;
   if (!rand_init)
     rinit();
-  union {
-    struct {
-      uint32_t time_low;
-      uint16_t time_mid;
-      uint16_t time_hi_and_version;
-      uint8_t  clk_seq_hi_res;
-      uint8_t  clk_seq_low;
-      uint8_t  node[6];
-    };
-    uint8_t __rnd[16];
-  } uuid;
 
-  int i = 0;
-  for (i = 0; i < 16; i++)
-    uuid.__rnd[i] = (rand() ^ i) & 0xff;
+  uint8_t uuid[16];
+  for (unsigned int i = 0; i < 16; i++)
+    uuid[i] = (rand() ^ i) & 0xff;
+  
+  uuid[6] = (unsigned char)(0x40 | (uuid[6] & 0x0F));
+  uuid[8] = (unsigned char)(0x80 | (uuid[8] & 0x3F));
 
-  uuid.clk_seq_hi_res = (uint8_t) ((uuid.clk_seq_hi_res & 0x3f) | 0x80);
-  uuid.time_hi_and_version = (uint16_t) ((uuid.time_hi_and_version & 0x0fff) | 0x4000);
-
-  snprintf((char *)ubuf, UUID_V4_LENGTH, "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
-    uuid.time_low, uuid.time_mid, uuid.time_hi_and_version,
-    uuid.clk_seq_hi_res, uuid.clk_seq_low,
-    uuid.node[0], uuid.node[1], uuid.node[2],
-    uuid.node[3], uuid.node[4], uuid.node[5]
+  snprintf((char *)ubuf, UUID_V4_LENGTH + 1, "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+    uuid[0], uuid[1],  uuid[2],  uuid[3],  uuid[4],  uuid[5],  uuid[6],  uuid[7],
+    uuid[8], uuid[9], uuid[10], uuid[11], uuid[12], uuid[13], uuid[14], uuid[15]
   );
 
   ubuf[UUID_V4_LENGTH] = '\x00';
