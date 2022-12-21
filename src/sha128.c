@@ -145,9 +145,9 @@ int tc_sha1_init(SHA_CTX *context) {
   return 1;
 }
 
-void tc_sha1_update(SHA_CTX* context, const void* text, unsigned int tsize) {
+int tc_sha1_update(SHA_CTX* context, const void* text, unsigned int tsize) {
   if (context == NULL || text == NULL || tsize == 0)
-    return ;
+    return 0;
 
   const uint8_t *data = text;
   size_t i, j;
@@ -168,16 +168,17 @@ void tc_sha1_update(SHA_CTX* context, const void* text, unsigned int tsize) {
     i = 0;
   }
   memcpy(&context->buffer[j], &data[i], tsize - i);
+  return 1;
 }
 
-void tc_sha1_final(SHA_CTX *context, unsigned char md[SHA_DIGEST_LENGTH]) {
+int tc_sha1_final(SHA_CTX *context, unsigned char md[SHA_DIGEST_LENGTH]) {
   if (context == NULL || md == NULL)
-    return ;
+    return 0;
 
   uint32_t i; uint8_t finalcount[8];
 
   for (i = 0; i < 8; i++)
-      finalcount[i] = (uint8_t) ((context->count[(i >= 4 ? 0 : 1)] >> ((3 - (i & 3)) * 8)) & 255);
+    finalcount[i] = (uint8_t) ((context->count[(i >= 4 ? 0 : 1)] >> ((3 - (i & 3)) * 8)) & 255);
 
   tc_sha1_update(context, (uint8_t *) "\200", 1);
 
@@ -189,12 +190,13 @@ void tc_sha1_final(SHA_CTX *context, unsigned char md[SHA_DIGEST_LENGTH]) {
   for (i = 0; i < SHA_DIGEST_LENGTH; i++)
     md[i] = (uint8_t) ((context->state[i >> 2] >> ((3 - (i & 3)) * 8)) & 255);
 
-  /* Wipe variables */
-  i = 0;
-  memset(context->buffer, 0, 64);
-  memset(context->state, 0, 20);
-  memset(context->count, 0, 8);
-  memset(finalcount, 0, 8);    /* SWR */
+  // /* Wipe variables */
+  // i = 0;
+  // memset(context->buffer, 0, 64);
+  // memset(context->state, 0, 20);
+  // memset(context->count, 0, 8);
+  // memset(finalcount, 0, 8);    /* SWR */
+  return 1;
 }
 
 static char digest[] = "\xda\x39\xa3\xee\x5e\x6b\x4b\x0d\x32\x55\xbf\xef\x95\x60\x18\x90\xaf\xd8\x07\x09";

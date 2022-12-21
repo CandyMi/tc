@@ -12,25 +12,15 @@
   if ((c) == 0)                                 \
     return -4
 
-static inline void tc_init_counter(char c[4], unsigned long counter) {
-  c[0] = (counter >> 24) & 0xff;
-  c[1] = (counter >> 16) & 0xff;
-  c[2] = (counter >> 8)  & 0xff;
-  c[3] = (counter >> 0)  & 0xff;
-}
-
 static inline int tc_pbkdf2_md5(const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, unsigned char out[MD5_DIGEST_LENGTH]) {
   pbkdf2_check_error(password, plen, salt, slen, count);
   
   MD5_CTX context;
   tc_md5_init(&context);
 
-  char c[4]; unsigned long counter = 1;
-  tc_init_counter(c, counter);
-
   tc_hmac_md5_init(&context, password, plen);
   tc_hmac_md5_update(&context, salt, slen);
-  tc_hmac_md5_update(&context, c, 4);
+  tc_hmac_md5_update(&context, "\x00\x00\x00\x01", 4);
   tc_hmac_md5_final(&context, out);
 
   if (count > 1) {
@@ -56,12 +46,9 @@ static inline int tc_pbkdf2_sha128(const void* password, unsigned int plen, cons
   SHA_CTX context;
   tc_sha1_init(&context);
 
-  char c[4]; unsigned long counter = 1;
-  tc_init_counter(c, counter);
-
   tc_hmac_sha1_init(&context, password, plen);
   tc_hmac_sha1_update(&context, salt, slen);
-  tc_hmac_sha1_update(&context, c, 4);
+  tc_hmac_sha1_update(&context, "\x00\x00\x00\x01", 4);
   tc_hmac_sha1_final(&context, out);
 
   if (count > 1) {
@@ -87,12 +74,9 @@ static inline int tc_pbkdf2_sha256(const void* password, unsigned int plen, cons
   SHA256_CTX context;
   tc_sha256_init(&context);
 
-  char c[4]; unsigned long counter = 1;
-  tc_init_counter(c, counter);
-
   tc_hmac_sha256_init(&context, password, plen);
   tc_hmac_sha256_update(&context, salt, slen);
-  tc_hmac_sha256_update(&context, c, 4);
+  tc_hmac_sha256_update(&context, "\x00\x00\x00\x01", 4);
   tc_hmac_sha256_final(&context, out);
 
   if (count > 1) {

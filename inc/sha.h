@@ -5,8 +5,8 @@
 #define __TC_SHA__
 
 /* MD5 */
-#define MD5_DIGEST_LENGTH (16)
-#define MD5_BLOCK_SIZE    (64)
+#define MD5_DIGEST_LENGTH       (16)
+#define MD5_BLOCK_SIZE          (64)
 
 #define MD5_Init(md5_ptr)                    tc_md5_init((md5_ptr))
 #define MD5_Update(md5_ptr,text,tsize)       tc_md5_update((md5_ptr),(text),(tsize))
@@ -24,7 +24,7 @@ typedef struct tc_md5_ctx {
 } MD5_CTX;
 
 TC_EXPORT int   tc_md5_init(MD5_CTX *context);
-TC_EXPORT void  tc_md5_update(MD5_CTX *context, const void* text, unsigned int tsize);
+TC_EXPORT int   tc_md5_update(MD5_CTX *context, const void* text, unsigned int tsize);
 TC_EXPORT int   tc_md5_final(MD5_CTX *context, unsigned char md[MD5_DIGEST_LENGTH]);
 TC_EXPORT void* tc_md5(const void* text, unsigned int tsize, unsigned char md[MD5_DIGEST_LENGTH]);
 
@@ -53,8 +53,8 @@ typedef struct tc_sha1_ctx {
 } SHA_CTX;
 
 TC_EXPORT int   tc_sha1_init(SHA_CTX* context);
-TC_EXPORT void  tc_sha1_update(SHA_CTX* context, const void* text, unsigned int tsize);
-TC_EXPORT void  tc_sha1_final(SHA_CTX* context, unsigned char md[SHA_DIGEST_LENGTH]);
+TC_EXPORT int   tc_sha1_update(SHA_CTX* context, const void* text, unsigned int tsize);
+TC_EXPORT int   tc_sha1_final(SHA_CTX* context, unsigned char md[SHA_DIGEST_LENGTH]);
 TC_EXPORT void* tc_sha1(const void* text, unsigned int tsize, unsigned char md[SHA_DIGEST_LENGTH]);
 
 TC_EXPORT int   tc_hmac_sha1_init(SHA_CTX* context, const void* key, unsigned int klen);
@@ -82,8 +82,8 @@ typedef struct tc_sha256_ctx {
 } SHA256_CTX;
 
 TC_EXPORT int   tc_sha256_init(SHA256_CTX* context);
-TC_EXPORT void  tc_sha256_update(SHA256_CTX* context, const void* text, unsigned int tsize);
-TC_EXPORT void  tc_sha256_final(SHA256_CTX* context, unsigned char md[SHA256_DIGEST_LENGTH]);
+TC_EXPORT int   tc_sha256_update(SHA256_CTX* context, const void* text, unsigned int tsize);
+TC_EXPORT int   tc_sha256_final(SHA256_CTX* context, unsigned char md[SHA256_DIGEST_LENGTH]);
 TC_EXPORT void* tc_sha256(const void* text, unsigned int tsize, unsigned char md[SHA256_DIGEST_LENGTH]);
 
 TC_EXPORT int   tc_hmac_sha256_init(SHA256_CTX* context, const void* key, unsigned int klen);

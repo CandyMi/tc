@@ -157,7 +157,10 @@ int tc_sha256_init(SHA256_CTX *context) {
   return 1;
 }
 
-void tc_sha256_update(SHA256_CTX* context, const void* text, unsigned int tsize) {
+int tc_sha256_update(SHA256_CTX* context, const void* text, unsigned int tsize) {
+  if (context == NULL || text == NULL || tsize == 0)
+    return 0;
+
   uint32_t pos = (uint32_t)context->count & 0x3F;
   const char* data = (const char*)text;
   while (tsize)
@@ -171,9 +174,13 @@ void tc_sha256_update(SHA256_CTX* context, const void* text, unsigned int tsize)
       tc_sha256_write_byte_block(context);
     }
   }
+  return 1;
 }
 
-void tc_sha256_final(SHA256_CTX* context, unsigned char md[SHA256_DIGEST_LENGTH]) {
+int tc_sha256_final(SHA256_CTX* context, unsigned char md[SHA256_DIGEST_LENGTH]) {
+  if (context == NULL || md == NULL)
+    return 0;
+
   uint64_t lenInBits = (context->count << 3);
   uint32_t pos = (uint32_t)context->count & 0x3F;
   unsigned i;
@@ -201,7 +208,7 @@ void tc_sha256_final(SHA256_CTX* context, unsigned char md[SHA256_DIGEST_LENGTH]
     *md++ = (unsigned char)(context->state[i] >> 8);
     *md++ = (unsigned char)(context->state[i]);
   }
-
+  return 1;
 }
 
 static char digest[] = "\xe3\xb0\xc4\x42\x98\xfc\x1c\x14\x9a\xfb\xf4\xc8\x99\x6f\xb9\x24\x27\xae\x41\xe4\x64\x9b\x93\x4c\xa4\x95\x99\x1b\x78\x52\xb8\x55";

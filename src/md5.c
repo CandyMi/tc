@@ -158,7 +158,7 @@ int tc_md5_init(MD5_CTX *context) {
   return 1;
 }
 
-void tc_md5_update(MD5_CTX *context, const void* text, unsigned int tsize) {
+int tc_md5_update(MD5_CTX *context, const void* text, unsigned int tsize) {
   if (context == NULL || text == NULL || tsize == 0)
     return;
 
