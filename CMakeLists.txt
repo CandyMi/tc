@@ -14,7 +14,6 @@ project("TinyCrypto" C)
 # 头文件
 set(tc_inc
   inc/tc.h
-  inc/md5.h
   inc/sha.h
   inc/rc4.h
   inc/utils.h
