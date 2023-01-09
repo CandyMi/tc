@@ -107,9 +107,12 @@ TC_EXPORT int tc_hashxor(const void* key, unsigned int ksize, const void* text, 
 */
 
 typedef enum tc_sign_method_t{
-  TC_MD5    = 0,
-  TC_SHA128 = 1,
-  TC_SHA256 = 2,
+#define TC_MD5 tc_sign_md5
+  tc_sign_md5    = 1,
+#define TC_SHA128 tc_sign_sha128
+  tc_sign_sha128 = 2,
+#define TC_SHA256 tc_sign_sha256
+  tc_sign_sha256 = 3,
 } tc_sign_method_t;
 
 TC_EXPORT int tc_pbkdf2(tc_sign_method_t mode, const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, unsigned char* out);

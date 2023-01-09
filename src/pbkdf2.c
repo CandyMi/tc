@@ -12,27 +12,29 @@
   if ((c) == 0)                                 \
     return -4
 
+#define pbkdf2_init_process(name, ctx, pw, plen, salt, slen, out)  \
+  tc_hmac_##name##_init(ctx, pw, plen);                            \
+  tc_hmac_##name##_update(ctx, salt, slen);                        \
+  tc_hmac_##name##_update(ctx, "\x00\x00\x00\x01", 4);             \
+  tc_hmac_##name##_final(ctx, out);
+
+#define pbkdf2_one_step(name, ctx, pw, plen, in, isize)    \
+  tc_hmac_##name##_init(ctx, pw, plen);                    \
+  tc_hmac_##name##_update(ctx, in, isize);                 \
+  tc_hmac_##name##_final(ctx, in);
+
 static inline int tc_pbkdf2_md5(const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, unsigned char out[MD5_DIGEST_LENGTH]) {
   pbkdf2_check_error(password, plen, salt, slen, count);
   
   MD5_CTX context;
-  tc_md5_init(&context);
-
-  tc_hmac_md5_init(&context, password, plen);
-  tc_hmac_md5_update(&context, salt, slen);
-  tc_hmac_md5_update(&context, "\x00\x00\x00\x01", 4);
-  tc_hmac_md5_final(&context, out);
+  pbkdf2_init_process(md5, &context, password, plen, salt, slen, out);
 
   if (count > 1) {
     char tmp[MD5_DIGEST_LENGTH];
     memcpy(tmp, out, MD5_DIGEST_LENGTH);
     unsigned int i, j;
     for (i = 1; i < count; i++) {
-
-      tc_hmac_md5_init(&context, password, plen);
-      tc_hmac_md5_update(&context, out, MD5_DIGEST_LENGTH);
-      tc_hmac_md5_final(&context, out);
-
+      pbkdf2_one_step(md5, &context, password, plen, out, MD5_DIGEST_LENGTH);
       for (j = 0; j < MD5_DIGEST_LENGTH; j++)
         tmp[j] ^= out[j];
     }
@@ -45,23 +47,14 @@ static inline int tc_pbkdf2_sha128(const void* password, unsigned int plen, cons
   pbkdf2_check_error(password, plen, salt, slen, count);
 
   SHA_CTX context;
-  tc_sha1_init(&context);
-
-  tc_hmac_sha1_init(&context, password, plen);
-  tc_hmac_sha1_update(&context, salt, slen);
-  tc_hmac_sha1_update(&context, "\x00\x00\x00\x01", 4);
-  tc_hmac_sha1_final(&context, out);
+  pbkdf2_init_process(sha1, &context, password, plen, salt, slen, out);
 
   if (count > 1) {
     char tmp[SHA_DIGEST_LENGTH];
     memcpy(tmp, out, SHA_DIGEST_LENGTH);
     unsigned int i, j;
     for (i = 1; i < count; i++) {
-
-      tc_hmac_sha1_init(&context, password, plen);
-      tc_hmac_sha1_update(&context, out, SHA_DIGEST_LENGTH);
-      tc_hmac_sha1_final(&context, out);
-
+      pbkdf2_one_step(sha1, &context, password, plen, out, SHA_DIGEST_LENGTH);
       for (j = 0; j < SHA_DIGEST_LENGTH; j++)
         tmp[j] ^= out[j];
     }
@@ -74,23 +67,14 @@ static inline int tc_pbkdf2_sha256(const void* password, unsigned int plen, cons
   pbkdf2_check_error(password, plen, salt, slen, count);
 
   SHA256_CTX context;
-  tc_sha256_init(&context);
-
-  tc_hmac_sha256_init(&context, password, plen);
-  tc_hmac_sha256_update(&context, salt, slen);
-  tc_hmac_sha256_update(&context, "\x00\x00\x00\x01", 4);
-  tc_hmac_sha256_final(&context, out);
+  pbkdf2_init_process(sha256, &context, password, plen, salt, slen, out);
 
   if (count > 1) {
     char tmp[SHA256_DIGEST_LENGTH];
     memcpy(tmp, out, SHA256_DIGEST_LENGTH);
     unsigned int i, j;
     for (i = 1; i < count; i++) {
-
-      tc_hmac_sha256_init(&context, password, plen);
-      tc_hmac_sha256_update(&context, out, SHA256_DIGEST_LENGTH);
-      tc_hmac_sha256_final(&context, out);
-
+      pbkdf2_one_step(sha256, &context, password, plen, out, SHA256_DIGEST_LENGTH);
       for (j = 0; j < SHA256_DIGEST_LENGTH; j++)
         tmp[j] ^= out[j];
     }
@@ -102,11 +86,11 @@ static inline int tc_pbkdf2_sha256(const void* password, unsigned int plen, cons
 int tc_pbkdf2(tc_sign_method_t mode, const void* password, unsigned int plen, const void* salt, unsigned int slen, unsigned int count, unsigned char* out) {
   switch (mode)
   {
-    case TC_MD5:
+    case tc_sign_md5:
       return tc_pbkdf2_md5(password, plen, salt, slen, count, out);
-    case TC_SHA128:
+    case tc_sign_sha128:
       return tc_pbkdf2_sha128(password, plen, salt, slen, count, out);
-    case TC_SHA256:
+    case tc_sign_sha256:
       return tc_pbkdf2_sha256(password, plen, salt, slen, count, out);
   }
   return -1;
