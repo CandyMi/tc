@@ -2,13 +2,17 @@
 
   `TinyCrypto`简称`TC`, 是适用于`C`与`C++`的**极简**加密、解密库.
 
-# Supported
+# Features
 
-  - [x] Windows (x86 and x64)
+  - [x] 支持的操作系统 (Win/BSD/Linux/MacOS等)
 
-  - [x] Linux (x86 and x64)
+  - [x] 无需外部库依赖, 无平台与硬件依赖
 
-  - [x] MacOS (x64)
+  - [x] 小巧且丰富, 方便自行定制环境
+
+  - [x] 外部易用性好, 可加快上手速度
+  
+  - [x] 可读性好、可维护性高、构建成本低
 
 # Usage
 
