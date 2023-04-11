@@ -4,7 +4,7 @@
 #ifndef __TC_RC4__
 #define __TC_RC4__
 
-#define RC4_set_key(key, len, data)             tc_rc4_set_key((key), (len), (data))
+#define RC4_set_key(key, len, data)             tc_rc4_set_key((key), (data), (len))
 #define RC4(key, len, indata, outdata)          tc_rc4((key), (indata), (len), (outdata))
 #define RC4_encrypt(key, len, indata, outdata)  RC4(key, len, indata, outdata)
 #define RC4_decrypt(key, len, indata, outdata)  RC4(key, len, indata, outdata)
