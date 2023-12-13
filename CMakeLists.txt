@@ -27,26 +27,20 @@ endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
-# 使用指定的编译标准
-set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS OFF)
-set(CMAKE_C_STANDARD 99)
+add_compile_definitions( _CRT_RAND_S _GNU_SOURCE )
 
 file(GLOB tinycrypto src/*.c)
 
 add_library(crypto-static STATIC ${tinycrypto})
 add_library(crypto SHARED ${tinycrypto})
 
-set_target_properties(
-  crypto-static PROPERTIES 
-    PREFIX "lib"
-    OUTPUT_NAME   "crypto"
-    PUBLIC_HEADER "${tc_inc}"
-  crypto PROPERTIES
-    PREFIX "lib"
-    OUTPUT_NAME   "crypto"
-    PUBLIC_HEADER "${tc_inc}"
-)
+if(WIN32)
+  set_target_properties(crypto PROPERTIES PUBLIC_HEADER "${tc_inc}" C_EXTENSIONS ON C_STANDARD 99 OUTPUT_NAME "tccrypto" PREFIX "" )
+  set_target_properties(crypto-static PROPERTIES PUBLIC_HEADER "${tc_inc}" C_EXTENSIONS ON C_STANDARD 99 OUTPUT_NAME "tccrypto" PREFIX "")
+else()
+  set_target_properties(crypto PROPERTIES PUBLIC_HEADER "${tc_inc}" C_EXTENSIONS ON C_STANDARD 99 OUTPUT_NAME "tccrypto" PREFIX "lib")
+  set_target_properties(crypto-static PROPERTIES PUBLIC_HEADER "${tc_inc}" C_EXTENSIONS ON C_STANDARD 99 OUTPUT_NAME "tccrypto" PREFIX "lib")
+endif(WIN32)
 
 if(ENABLE_TEST)
   add_subdirectory( test )
