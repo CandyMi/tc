@@ -86,9 +86,14 @@ TC_EXPORT int tc_base64decode(const void* text, unsigned int tsize, unsigned cha
 #define uuid_v4 tc_uuid_v4
 TC_EXPORT int tc_uuid_v4(unsigned char *ubuf);
 
+#define ulid tc_ulid
+TC_EXPORT int tc_ulid(unsigned char ulid[26]);
+
 #define randomkey tc_randomkey
 TC_EXPORT int tc_randomkey(unsigned char *rbuf, unsigned int rsize);
 
+#define nanoid tc_nanoid
+TC_EXPORT int tc_nanoid(const char *alphabet, unsigned char *rbuf, unsigned int *rsize);
 /*
 **  Hash
 */
