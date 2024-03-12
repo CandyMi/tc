@@ -25,6 +25,13 @@ else()
   set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 endif()
 
+# 增加 CCache 支持
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+endif()
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 add_compile_definitions( _CRT_RAND_S _GNU_SOURCE )
