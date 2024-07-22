@@ -10,7 +10,11 @@
   if (!(s) || (slen) == 0)                      \
     return -3;                                  \
   if ((c) == 0)                                 \
-    return -4
+    return -4;
+
+#define pbkdf2_init_tmp(val, data, len) char val[len]; memcpy(tmp, out, len);
+
+#define pbkdf2_xor_step(a, b, len) { int n; for (n = 0; n < len; n++) a[n] ^= b[n]; }
 
 #define pbkdf2_init_process(name, ctx, pw, plen, salt, slen, out)  \
   tc_hmac_##name##_init(ctx, pw, plen);                            \
@@ -30,13 +34,10 @@ static inline int tc_pbkdf2_md5(const void* password, unsigned int plen, const v
   pbkdf2_init_process(md5, &context, password, plen, salt, slen, out);
 
   if (count > 1) {
-    char tmp[MD5_DIGEST_LENGTH];
-    memcpy(tmp, out, MD5_DIGEST_LENGTH);
-    unsigned int i, j;
+    int i; pbkdf2_init_tmp(tmp, out, MD5_DIGEST_LENGTH);
     for (i = 1; i < count; i++) {
       pbkdf2_one_step(md5, &context, password, plen, out, MD5_DIGEST_LENGTH);
-      for (j = 0; j < MD5_DIGEST_LENGTH; j++)
-        tmp[j] ^= out[j];
+      pbkdf2_xor_step(tmp, out, MD5_DIGEST_LENGTH);
     }
     memcpy(out, tmp, MD5_DIGEST_LENGTH);
   }
@@ -50,13 +51,10 @@ static inline int tc_pbkdf2_sha128(const void* password, unsigned int plen, cons
   pbkdf2_init_process(sha1, &context, password, plen, salt, slen, out);
 
   if (count > 1) {
-    char tmp[SHA_DIGEST_LENGTH];
-    memcpy(tmp, out, SHA_DIGEST_LENGTH);
-    unsigned int i, j;
+    int i; pbkdf2_init_tmp(tmp, out, SHA_DIGEST_LENGTH);
     for (i = 1; i < count; i++) {
       pbkdf2_one_step(sha1, &context, password, plen, out, SHA_DIGEST_LENGTH);
-      for (j = 0; j < SHA_DIGEST_LENGTH; j++)
-        tmp[j] ^= out[j];
+      pbkdf2_xor_step(tmp, out, SHA_DIGEST_LENGTH);
     }
     memcpy(out, tmp, SHA_DIGEST_LENGTH);
   }
@@ -70,13 +68,10 @@ static inline int tc_pbkdf2_sha256(const void* password, unsigned int plen, cons
   pbkdf2_init_process(sha256, &context, password, plen, salt, slen, out);
 
   if (count > 1) {
-    char tmp[SHA256_DIGEST_LENGTH];
-    memcpy(tmp, out, SHA256_DIGEST_LENGTH);
-    unsigned int i, j;
+    int i; pbkdf2_init_tmp(tmp, out, SHA256_DIGEST_LENGTH);
     for (i = 1; i < count; i++) {
       pbkdf2_one_step(sha256, &context, password, plen, out, SHA256_DIGEST_LENGTH);
-      for (j = 0; j < SHA256_DIGEST_LENGTH; j++)
-        tmp[j] ^= out[j];
+      pbkdf2_xor_step(tmp, out, SHA256_DIGEST_LENGTH);
     }
     memcpy(out, tmp, SHA256_DIGEST_LENGTH);
   }
