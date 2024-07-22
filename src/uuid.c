@@ -76,7 +76,6 @@ int tc_uuid_v4(unsigned char *ubuf) {
     uuid[8], uuid[9], uuid[10], uuid[11], uuid[12], uuid[13], uuid[14], uuid[15]
   );
 
-  ubuf[UUID_V4_LENGTH] = '\x00';
   return 1;
 }
 
