@@ -16,6 +16,7 @@ set(tc_inc
   inc/tc.h
   inc/sha.h
   inc/rc4.h
+  inc/aes.h
   inc/utils.h
 )
 
@@ -36,10 +37,18 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 add_compile_definitions( _CRT_RAND_S _GNU_SOURCE )
 
+if (NOT MSVC)
+  add_compile_options(-fPIC -pipe)
+endif(NOT MSVC)
+
 file(GLOB tinycrypto src/*.c)
 
-add_library(crypto-static STATIC ${tinycrypto})
-add_library(crypto SHARED ${tinycrypto})
+add_library(crypto_object OBJECT ${tinycrypto})
+
+# 动态库
+add_library(crypto-static STATIC $<TARGET_OBJECTS:crypto_object>)
+# 静态库
+add_library(crypto SHARED $<TARGET_OBJECTS:crypto_object>)
 
 if(WIN32)
   set_target_properties(crypto PROPERTIES PUBLIC_HEADER "${tc_inc}" C_EXTENSIONS ON C_STANDARD 99 OUTPUT_NAME "tccrypto" PREFIX "" )
@@ -50,7 +59,7 @@ else()
 endif(WIN32)
 
 if(ENABLE_TEST)
-  add_subdirectory( test )
+  add_subdirectory( tests )
 endif()
 
 install(

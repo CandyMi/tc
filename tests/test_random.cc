@@ -21,7 +21,7 @@ int main(int argc, char const *argv[])
     randomkey(rkey, RKEY_MIN_LENGTH);
 
     unsigned char rkey_hex[HEX_ENC_LENGTH(MD5_DIGEST_LENGTH)];
-    hexencode(rkey, RKEY_MIN_LENGTH, rkey_hex, 0);
+    hexencode(rkey, RKEY_MIN_LENGTH, rkey_hex, tc_hex_lower);
     std::cout << "randomkey: " << rkey_hex << std::endl;
     return 0;
   }

@@ -34,7 +34,7 @@ static inline int tc_pbkdf2_md5(const void* password, unsigned int plen, const v
   pbkdf2_init_process(md5, &context, password, plen, salt, slen, out);
 
   if (count > 1) {
-    int i; pbkdf2_init_tmp(tmp, out, MD5_DIGEST_LENGTH);
+    uint32_t i; pbkdf2_init_tmp(tmp, out, MD5_DIGEST_LENGTH);
     for (i = 1; i < count; i++) {
       pbkdf2_one_step(md5, &context, password, plen, out, MD5_DIGEST_LENGTH);
       pbkdf2_xor_step(tmp, out, MD5_DIGEST_LENGTH);
@@ -51,7 +51,7 @@ static inline int tc_pbkdf2_sha128(const void* password, unsigned int plen, cons
   pbkdf2_init_process(sha1, &context, password, plen, salt, slen, out);
 
   if (count > 1) {
-    int i; pbkdf2_init_tmp(tmp, out, SHA_DIGEST_LENGTH);
+    uint32_t i; pbkdf2_init_tmp(tmp, out, SHA_DIGEST_LENGTH);
     for (i = 1; i < count; i++) {
       pbkdf2_one_step(sha1, &context, password, plen, out, SHA_DIGEST_LENGTH);
       pbkdf2_xor_step(tmp, out, SHA_DIGEST_LENGTH);
@@ -68,7 +68,7 @@ static inline int tc_pbkdf2_sha256(const void* password, unsigned int plen, cons
   pbkdf2_init_process(sha256, &context, password, plen, salt, slen, out);
 
   if (count > 1) {
-    int i; pbkdf2_init_tmp(tmp, out, SHA256_DIGEST_LENGTH);
+    uint32_t i; pbkdf2_init_tmp(tmp, out, SHA256_DIGEST_LENGTH);
     for (i = 1; i < count; i++) {
       pbkdf2_one_step(sha256, &context, password, plen, out, SHA256_DIGEST_LENGTH);
       pbkdf2_xor_step(tmp, out, SHA256_DIGEST_LENGTH);

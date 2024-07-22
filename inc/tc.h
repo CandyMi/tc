@@ -40,6 +40,7 @@
 
 #include "sha.h"
 #include "rc4.h"
+#include "aes.h"
 #include "utils.h"
 
 #ifdef __cplusplus
