@@ -99,10 +99,14 @@ TC_EXPORT int tc_nanoid(const char *alphabet, unsigned char *rbuf, unsigned int 
 */
 
 #define HASHKEY_LENGTH      (8)
+#define HASHKEY64_LENGTH    (16)
 #define HASHXOR_LENGTH(len) (len)
 
 #define hashkey tc_hashkey
 TC_EXPORT int tc_hashkey(const void* text, unsigned int tsize, unsigned char md[HASHKEY_LENGTH]);
+
+#define tc_hashkey64 tc_hashkey64
+TC_EXPORT int tc_hashkey64(const void* text, unsigned int tsize, unsigned char md[HASHKEY_LENGTH]);
 
 #define hashxor tc_hashxor
 TC_EXPORT int tc_hashxor(const void* key, unsigned int ksize, const void* text, unsigned int tsize, unsigned char* md);
