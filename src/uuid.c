@@ -111,7 +111,7 @@ int tc_ulid(unsigned char ulid_buf[26]) {
 #else
   clock_gettime(CLOCK_REALTIME, &ts);
 #endif
-  int64_t nt = ts.tv_sec * 1000000ULL + ts.tv_nsec / 1000ULL;
+  int64_t nt = ts.tv_sec * 1000ULL + ts.tv_nsec / 1000000ULL;
 
   ulid_tmp[0] = nt >> 40 & 0xff; ulid_tmp[1] = nt >> 32 & 0xff;
   ulid_tmp[2] = nt >> 24 & 0xff; ulid_tmp[3] = nt >> 16 & 0xff;
