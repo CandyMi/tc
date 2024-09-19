@@ -5,64 +5,11 @@
 #include <tc.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include <time.h>
-
-#ifdef _WIN32
-  #include <stdlib.h>
-  #include <process.h>
-  #define getpid    _getpid
-  #define tc_thread_local __declspec(thread)
-  static inline int rand_r(unsigned int* randomValue) {
-    unsigned int val = *randomValue;
-    rand_s(&val);
-    *randomValue = val;
-    return val;
-  }
-#else
-  #include <unistd.h>
-  #define tc_thread_local __thread
-#endif
-
-/* Cuban prime */
-#define prime1 (0xf9cd)
-#define prime2 (0xec4d)
-
-tc_thread_local bool rand_init = 0;
-tc_thread_local unsigned int rseed = 0;
-
-void tc_random_init () {
-  if (!rand_init)
-  {
-    rand_init = 1;
-    rseed = (unsigned int)time(NULL) ^ clock() ^ getpid();
-  }
-}
-
-int tc_random_next () {
-  return (int)rand_r(&rseed);
-}
-
-int tc_randomkey(unsigned char *rbuf, unsigned int rsize) {
-  if (rbuf == NULL || rsize < RKEY_MIN_LENGTH)
-    return 0;
-  
-  tc_random_init();
-  unsigned int i, j;
-  char tmp1[RKEY_MIN_LENGTH]; char tmp2[RKEY_MIN_LENGTH];
-  for (j = 0; j < RKEY_MIN_LENGTH; j++) {
-    tmp1[j] = (tc_random_next() ^ prime1) & 0xff;
-    tmp2[j] = (tc_random_next() ^ prime2) & 0xff;
-  }
-  for (i = 0; i < rsize; i++)
-    rbuf[i] = (tmp1[i % RKEY_MIN_LENGTH] ^ tmp2[i % RKEY_MIN_LENGTH]) & 0xff;
-  return 1;
-}
 
 int tc_uuid_v4(unsigned char *ubuf) {
   if (ubuf == NULL)
     return 0;
-  
-  tc_random_init();
+
   uint8_t uuid[16];
   unsigned int i;
   for (i = 0; i < 16; i++)
@@ -84,8 +31,7 @@ static const char nanoid_alphabet[] = "_-0123456789abcdefghijklmnopqrstuvwxyzABC
 int tc_nanoid(const char *alphabet, unsigned char *rbuf, unsigned int *rsize) {
   if (!rbuf || !rsize || !*rbuf)
     return 0;
-  
-  tc_random_init();
+
   if (alphabet == NULL)
     alphabet = nanoid_alphabet;
   size_t tsize = strlen(alphabet);
@@ -102,16 +48,9 @@ int tc_ulid(unsigned char ulid_buf[26]) {
   if (!ulid_buf)
     return 0;
 
-  tc_random_init();
   char ulid_tmp[16];
 
-  struct timespec ts;
-#ifdef _WIN32
-  timespec_get(&ts, TIME_UTC);
-#else
-  clock_gettime(CLOCK_REALTIME, &ts);
-#endif
-  int64_t nt = ts.tv_sec * 1000ULL + ts.tv_nsec / 1000000ULL;
+  uint64_t nt; tc_time_millisecond(&nt);
 
   ulid_tmp[0] = nt >> 40 & 0xff; ulid_tmp[1] = nt >> 32 & 0xff;
   ulid_tmp[2] = nt >> 24 & 0xff; ulid_tmp[3] = nt >> 16 & 0xff;

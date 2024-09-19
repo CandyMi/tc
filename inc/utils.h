@@ -1,6 +1,33 @@
 #ifndef __TC_UTILS__
 #define __TC_UTILS__
 
+
+/*
+** Random **
+*/
+
+#define tc_random_next tc_random_next
+TC_EXPORT int tc_random_next();
+
+#define tc_randomkey tc_randomkey
+TC_EXPORT int tc_randomkey(unsigned char *rbuf, unsigned int rsize);
+
+/*
+** CurrentTime **
+*/
+
+#ifdef _WIN32
+  #define tc_time_t     time_t
+  #define tc_longtime_t unsigned long long
+#else
+  #define tc_time_t     time_t
+  #define tc_longtime_t unsigned long
+#endif
+
+TC_EXPORT int tc_time(tc_time_t *ts);
+TC_EXPORT int tc_time_millisecond(tc_longtime_t *ts);
+TC_EXPORT int tc_time_microsecond(tc_longtime_t *ts);
+
 /*
 ** crc-32 **
 */

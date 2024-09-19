@@ -14,9 +14,9 @@
 # endif
 
 typedef union {
-    uint8_t b[8];
-    uint32_t w[2];
-    uint64_t d;
+  uint8_t b[8];
+  uint32_t w[2];
+  uint64_t d;
 } uni;
 
 /*
@@ -577,39 +577,29 @@ static void KeyExpansion(const uint8_t *key, uint64_t *w, int nr, int nk)
 /**
  * Expand the cipher key into the encryption key schedule.
 */
-int AES_set_encrypt_key(const uint8_t *userKey, const aes_bit_t bits, AES_KEY *key)
+int tc_aes_set_key(const uint8_t *userKey, const aes_bit_t bits, AES_KEY *key)
 {
   if (!userKey || !key)
-      return -1;
-  if (bits != 128 && bits != 192 && bits != 256)
-      return -2;
+    return -1;
 
-  uint64_t *rk = (uint64_t*)key->rd_key;
+  switch (bits)
+  {
+    case 128: key->rounds = 10; break;
+    case 192: key->rounds = 12; break;
+    case 256: key->rounds = 14; break;  
+    default: return -1;
+  }
 
-  if (bits == 128)
-      key->rounds = 10;
-  else if (bits == 192)
-      key->rounds = 12;
-  else
-      key->rounds = 14;
-
-  KeyExpansion(userKey, rk, key->rounds, bits / 32);
+  KeyExpansion(userKey, (uint64_t*)key->rd_key, key->rounds, bits / 32);
   return 0;
 }
 
-int AES_set_decrypt_key(const uint8_t *userKey, const aes_bit_t bits, AES_KEY *key)
+void tc_aes_encrypt(const uint8_t *in, uint8_t *out, const AES_KEY *key)
 {
-  return AES_set_encrypt_key(userKey, bits, key);
-}
-
-void AES_encrypt(const uint8_t *in, uint8_t *out, const AES_KEY *key)
-{
-  // const uint64_t *rk = (uint64_t*)key->rd_key;
   Cipher(in, out, (uint64_t*)key->rd_key, key->rounds);
 }
 
-void AES_decrypt(const uint8_t *in, uint8_t *out, const AES_KEY *key)
+void tc_aes_decrypt(const uint8_t *in, uint8_t *out, const AES_KEY *key)
 {
-  // const uint64_t *rk = (uint64_t*)key->rd_key;
   InvCipher(in, out, (uint64_t*)key->rd_key, key->rounds);
 }

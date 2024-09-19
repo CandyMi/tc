@@ -25,12 +25,14 @@ typedef enum tc_aes_bit_t {
   aes_256 = 256,
 } aes_bit_t;
 
-TC_EXPORT int AES_set_encrypt_key(const uint8_t *userKey, const aes_bit_t bits, AES_KEY *key);
+#define AES_set_encrypt_key tc_aes_set_key
+#define AES_set_decrypt_key tc_aes_set_key
+TC_EXPORT int tc_aes_set_key(const uint8_t *userKey, const aes_bit_t bits, AES_KEY *key);
 
-TC_EXPORT int AES_set_decrypt_key(const uint8_t *userKey, const aes_bit_t bits, AES_KEY *key);
+#define AES_encrypt tc_aes_encrypt
+TC_EXPORT void tc_aes_encrypt(const uint8_t *in, uint8_t *out, const AES_KEY *key);
 
-TC_EXPORT void AES_encrypt(const uint8_t *in, uint8_t *out, const AES_KEY *key);
-
-TC_EXPORT void AES_decrypt(const uint8_t *in, uint8_t *out, const AES_KEY *key);
+#define AES_decrypt tc_aes_decrypt
+TC_EXPORT void tc_aes_decrypt(const uint8_t *in, uint8_t *out, const AES_KEY *key);
 
 #endif
